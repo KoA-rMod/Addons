@@ -25,7 +25,7 @@
 
 _addon.author   = 'Kender';
 _addon.name     = 'fasttraveler';
-_addon.version  = '1.0';
+_addon.version  = '1.1';
 _addon.description = 'Allows fast travel from inside dungeons, caves, buildings, etc.'
 
 require 'common';
@@ -47,17 +47,15 @@ local function set_fast_traveler(enabled)
     end
 
     -- Prepare the write value..
-    local v = string.char(0xE8, 0xD6, 0x5B, 0xD4, 0xFF);
+    local v = { 0xE8, 0xD6, 0x5B, 0xD4, 0xFF };
     if (enabled == true) then
-        v = string.char(0xB0, 0x01, 0x90, 0x90, 0x90);
+        v = { 0xB0, 0x01, 0x90, 0x90, 0x90 };
     end
 
     -- Unprotect the address and write the value..
-    for i = 1,string.len(v)
-    do
-        hook.memory.unprotect(fasttraveler.address + i - 1, 1);
-        hook.memory.write_uint8(fasttraveler.address + i - 1, string.byte(v, i));
-    end
+    hook.memory.unprotect(fasttraveler.address, 5);
+    hook.memory.write_array(fasttraveler.address, v);
+
 end
 
 ----------------------------------------------------------------------------------------------------
